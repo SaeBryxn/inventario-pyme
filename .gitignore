@@ -1,0 +1,23 @@
+# Dependencias
+node_modules/
+
+# Variables de entorno (NUNCA subir credenciales reales)
+.env
+.env.local
+*.env
+
+# Build / salida
+dist/
+build/
+
+# Logs
+*.log
+npm-debug.log*
+
+# Editor / SO
+.vscode/
+.DS_Store
+Thumbs.db
+
+# Obsidian (config local del vault, opcional)
+.obsidian/
