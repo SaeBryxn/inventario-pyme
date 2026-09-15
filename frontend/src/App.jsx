@@ -8,6 +8,7 @@ import Usuarios from './pages/Usuarios.jsx';
 import Productos from './pages/Productos.jsx';
 import Categorias from './pages/Categorias.jsx';
 import Proveedores from './pages/Proveedores.jsx';
+import Inventario from './pages/Inventario.jsx';
 
 export default function App() {
   return (
@@ -28,6 +29,14 @@ export default function App() {
             element={
               <ProtectedRoute>
                 <Productos />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/inventario"
+            element={
+              <ProtectedRoute rol="admin">
+                <Inventario />
               </ProtectedRoute>
             }
           />

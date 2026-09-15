@@ -22,6 +22,7 @@ export default function Layout({ children }) {
         <nav className="topbar__nav">
           <Link to="/">Dashboard</Link>
           <Link to="/productos">Productos</Link>
+          {usuario?.rol === 'admin' && <Link to="/inventario">Inventario</Link>}
           {usuario?.rol === 'admin' && <Link to="/categorias">Categorías</Link>}
           {usuario?.rol === 'admin' && <Link to="/proveedores">Proveedores</Link>}
           {usuario?.rol === 'admin' && <Link to="/usuarios">Usuarios</Link>}

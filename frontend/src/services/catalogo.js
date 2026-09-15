@@ -15,6 +15,21 @@ export const proveedoresService = {
   eliminar: (id) => api.del(`/api/proveedores/${id}`),
 };
 
+export const movimientosService = {
+  // params: { producto_id, tipo, desde, hasta }
+  listar: (params = {}) => {
+    const qs = new URLSearchParams(
+      Object.entries(params).filter(([, v]) => v !== '' && v != null)
+    ).toString();
+    return api.get(`/api/movimientos${qs ? `?${qs}` : ''}`);
+  },
+  registrar: (data) => api.post('/api/movimientos', data),
+};
+
+export const dashboardService = {
+  resumen: () => api.get('/api/dashboard'),
+};
+
 export const productosService = {
   // params: { buscar, categoria, estado, page, limit }
   listar: (params = {}) => {

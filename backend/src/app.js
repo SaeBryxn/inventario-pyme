@@ -9,6 +9,8 @@ import usuariosRoutes from './routes/usuarios.routes.js';
 import categoriasRoutes from './routes/categorias.routes.js';
 import proveedoresRoutes from './routes/proveedores.routes.js';
 import productosRoutes from './routes/productos.routes.js';
+import movimientosRoutes from './routes/movimientos.routes.js';
+import dashboardRoutes from './routes/dashboard.routes.js';
 
 const app = express();
 
@@ -27,7 +29,9 @@ app.use('/api/usuarios', usuariosRoutes);
 app.use('/api/categorias', categoriasRoutes);
 app.use('/api/proveedores', proveedoresRoutes);
 app.use('/api/productos', productosRoutes);
-// TODO Sprint 3+: /api/movimientos, /api/ventas, /api/dashboard
+app.use('/api/movimientos', movimientosRoutes);
+app.use('/api/dashboard', dashboardRoutes);
+// TODO Sprint 4: /api/ventas
 
 // --- 404 para rutas no encontradas ---
 app.use((req, res) => {
