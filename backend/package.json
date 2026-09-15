@@ -1,0 +1,21 @@
+{
+  "name": "stockpro-backend",
+  "version": "0.1.0",
+  "description": "API del Sistema de Gestión de Inventario para PYMEs (StockPro)",
+  "type": "module",
+  "main": "src/app.js",
+  "scripts": {
+    "dev": "node --watch src/app.js",
+    "start": "node src/app.js",
+    "db:init": "node db/init.js",
+    "seed": "node db/seed.js"
+  },
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "jsonwebtoken": "^9.0.2",
+    "pg": "^8.12.0"
+  }
+}
