@@ -1,0 +1,29 @@
+// Servicios de catálogo: categorías, proveedores y productos.
+import { api } from './api.js';
+
+export const categoriasService = {
+  listar: () => api.get('/api/categorias'),
+  crear: (data) => api.post('/api/categorias', data),
+  actualizar: (id, data) => api.put(`/api/categorias/${id}`, data),
+  eliminar: (id) => api.del(`/api/categorias/${id}`),
+};
+
+export const proveedoresService = {
+  listar: () => api.get('/api/proveedores'),
+  crear: (data) => api.post('/api/proveedores', data),
+  actualizar: (id, data) => api.put(`/api/proveedores/${id}`, data),
+  eliminar: (id) => api.del(`/api/proveedores/${id}`),
+};
+
+export const productosService = {
+  // params: { buscar, categoria, estado, page, limit }
+  listar: (params = {}) => {
+    const qs = new URLSearchParams(
+      Object.entries(params).filter(([, v]) => v !== '' && v != null)
+    ).toString();
+    return api.get(`/api/productos${qs ? `?${qs}` : ''}`);
+  },
+  crear: (data) => api.post('/api/productos', data),
+  actualizar: (id, data) => api.put(`/api/productos/${id}`, data),
+  toggleActivo: (id) => api.patch(`/api/productos/${id}/estado`),
+};

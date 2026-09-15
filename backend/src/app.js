@@ -6,6 +6,9 @@ import 'dotenv/config';
 import { testConnection } from './config/db.js';
 import authRoutes from './routes/auth.routes.js';
 import usuariosRoutes from './routes/usuarios.routes.js';
+import categoriasRoutes from './routes/categorias.routes.js';
+import proveedoresRoutes from './routes/proveedores.routes.js';
+import productosRoutes from './routes/productos.routes.js';
 
 const app = express();
 
@@ -21,7 +24,10 @@ app.get('/api/health', (req, res) => {
 // --- Rutas de la aplicación ---
 app.use('/api/auth', authRoutes);
 app.use('/api/usuarios', usuariosRoutes);
-// TODO Sprint 2+: app.use('/api/productos', productosRoutes) ...
+app.use('/api/categorias', categoriasRoutes);
+app.use('/api/proveedores', proveedoresRoutes);
+app.use('/api/productos', productosRoutes);
+// TODO Sprint 3+: /api/movimientos, /api/ventas, /api/dashboard
 
 // --- 404 para rutas no encontradas ---
 app.use((req, res) => {

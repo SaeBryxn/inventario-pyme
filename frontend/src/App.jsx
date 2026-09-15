@@ -5,6 +5,9 @@ import ProtectedRoute from './components/ProtectedRoute.jsx';
 import Login from './pages/Login.jsx';
 import Dashboard from './pages/Dashboard.jsx';
 import Usuarios from './pages/Usuarios.jsx';
+import Productos from './pages/Productos.jsx';
+import Categorias from './pages/Categorias.jsx';
+import Proveedores from './pages/Proveedores.jsx';
 
 export default function App() {
   return (
@@ -21,6 +24,30 @@ export default function App() {
             }
           />
           <Route
+            path="/productos"
+            element={
+              <ProtectedRoute>
+                <Productos />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/categorias"
+            element={
+              <ProtectedRoute rol="admin">
+                <Categorias />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/proveedores"
+            element={
+              <ProtectedRoute rol="admin">
+                <Proveedores />
+              </ProtectedRoute>
+            }
+          />
+          <Route
             path="/usuarios"
             element={
               <ProtectedRoute rol="admin">
@@ -28,7 +55,7 @@ export default function App() {
               </ProtectedRoute>
             }
           />
-          {/* TODO Sprint 2+: /productos, /ventas, /inventario, /proveedores */}
+          {/* TODO Sprint 3+: /inventario, /ventas */}
         </Routes>
       </BrowserRouter>
     </AuthProvider>
