@@ -9,6 +9,8 @@ import Productos from './pages/Productos.jsx';
 import Categorias from './pages/Categorias.jsx';
 import Proveedores from './pages/Proveedores.jsx';
 import Inventario from './pages/Inventario.jsx';
+import Ventas from './pages/Ventas.jsx';
+import Reportes from './pages/Reportes.jsx';
 
 export default function App() {
   return (
@@ -29,6 +31,22 @@ export default function App() {
             element={
               <ProtectedRoute>
                 <Productos />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/ventas"
+            element={
+              <ProtectedRoute>
+                <Ventas />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/reportes"
+            element={
+              <ProtectedRoute rol="admin">
+                <Reportes />
               </ProtectedRoute>
             }
           />

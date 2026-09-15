@@ -30,6 +30,22 @@ export const dashboardService = {
   resumen: () => api.get('/api/dashboard'),
 };
 
+export const ventasService = {
+  listar: (params = {}) => {
+    const qs = new URLSearchParams(
+      Object.entries(params).filter(([, v]) => v !== '' && v != null)
+    ).toString();
+    return api.get(`/api/ventas${qs ? `?${qs}` : ''}`);
+  },
+  detalle: (id) => api.get(`/api/ventas/${id}`),
+  registrar: (data) => api.post('/api/ventas', data),
+};
+
+export const reportesService = {
+  masVendidos: () => api.get('/api/reportes/mas-vendidos'),
+  stockBajo: () => api.get('/api/reportes/stock-bajo'),
+};
+
 export const productosService = {
   // params: { buscar, categoria, estado, page, limit }
   listar: (params = {}) => {

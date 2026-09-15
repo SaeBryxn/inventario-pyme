@@ -11,6 +11,8 @@ import proveedoresRoutes from './routes/proveedores.routes.js';
 import productosRoutes from './routes/productos.routes.js';
 import movimientosRoutes from './routes/movimientos.routes.js';
 import dashboardRoutes from './routes/dashboard.routes.js';
+import ventasRoutes from './routes/ventas.routes.js';
+import reportesRoutes from './routes/reportes.routes.js';
 
 const app = express();
 
@@ -31,7 +33,8 @@ app.use('/api/proveedores', proveedoresRoutes);
 app.use('/api/productos', productosRoutes);
 app.use('/api/movimientos', movimientosRoutes);
 app.use('/api/dashboard', dashboardRoutes);
-// TODO Sprint 4: /api/ventas
+app.use('/api/ventas', ventasRoutes);
+app.use('/api/reportes', reportesRoutes);
 
 // --- 404 para rutas no encontradas ---
 app.use((req, res) => {

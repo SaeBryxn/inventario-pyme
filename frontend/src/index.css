@@ -157,6 +157,27 @@ tbody tr:hover { background: #faf9fe; }
 .alertas { margin-top: 2rem; }
 .alertas h3 { font-size: 1.1rem; margin-bottom: 0.75rem; }
 
+/* Ventas: modal más ancho, agregar al carrito, total */
+.modal--ancho { max-width: 560px; }
+.venta__agregar { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+.venta__agregar select {
+  flex: 1; min-width: 0; background: #fff; border: 1px solid var(--border); border-radius: 10px;
+  padding: 0.55rem 0.7rem; color: var(--fg); font-size: 0.9rem;
+}
+.venta__agregar input {
+  background: #fff; border: 1px solid var(--border); border-radius: 10px;
+  padding: 0.55rem 0.6rem; color: var(--fg);
+}
+.venta__total {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 0.75rem 0.25rem; font-size: 1.15rem; border-top: 2px solid var(--border); margin-top: 0.25rem;
+}
+.venta__total strong { color: var(--accent); font-size: 1.3rem; }
+
+/* Reportes */
+.reporte { margin-top: 2rem; }
+.reporte h3 { font-size: 1.05rem; }
+
 .mono { font-family: var(--mono); font-size: 0.85rem; color: var(--muted); }
 
 /* Filtros de productos */
@@ -186,6 +207,7 @@ tbody tr:hover { background: #faf9fe; }
   width: 100%; max-width: 420px; padding: 1.75rem;
   display: grid; gap: 1rem;
 }
+.modal > * { min-width: 0; }
 .modal h3 { font-size: 1.2rem; }
 .modal label { display: grid; gap: 0.35rem; font-size: 0.85rem; color: var(--muted); }
 .modal input, .modal select {
