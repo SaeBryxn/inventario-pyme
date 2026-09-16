@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import Layout from '../components/Layout.jsx';
 import { dashboardService } from '../services/catalogo.js';
+import { IconBox, IconAlert, IconCart, IconChart } from '../components/icons.jsx';
 
 export default function Dashboard() {
   const [data, setData] = useState(null);
@@ -28,19 +29,19 @@ export default function Dashboard() {
         <>
           <div className="cards">
             <div className="card stat">
-              <span className="stat__num">{data.totalProductos}</span>
+              <div className="stat__top"><span className="stat__num">{data.totalProductos}</span><span className="stat__icon"><IconBox width={18} height={18} /></span></div>
               <span className="stat__label">Productos activos</span>
             </div>
             <div className={`card stat ${data.stockBajoCount > 0 ? 'stat--alerta' : ''}`}>
-              <span className="stat__num">{data.stockBajoCount}</span>
+              <div className="stat__top"><span className="stat__num">{data.stockBajoCount}</span><span className="stat__icon"><IconAlert width={18} height={18} /></span></div>
               <span className="stat__label">Productos con stock bajo</span>
             </div>
             <div className="card stat">
-              <span className="stat__num">{data.ventasHoyCount}</span>
+              <div className="stat__top"><span className="stat__num">{data.ventasHoyCount}</span><span className="stat__icon"><IconCart width={18} height={18} /></span></div>
               <span className="stat__label">Ventas hoy</span>
             </div>
             <div className="card stat">
-              <span className="stat__num">{money(data.valorInventario)}</span>
+              <div className="stat__top"><span className="stat__num">{money(data.valorInventario)}</span><span className="stat__icon"><IconChart width={18} height={18} /></span></div>
               <span className="stat__label">Valor del inventario</span>
             </div>
           </div>

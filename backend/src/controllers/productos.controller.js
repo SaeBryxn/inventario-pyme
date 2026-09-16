@@ -35,7 +35,7 @@ export async function listar(req, res, next) {
     const dataParams = [...params, limit, offset];
     const { rows } = await query(
       `SELECT p.id, p.sku, p.nombre, p.categoria_id, c.nombre AS categoria,
-              p.precio_compra, p.precio_venta, p.stock_actual, p.stock_minimo, p.activo,
+              p.precio_compra, p.precio_venta, p.stock_actual, p.stock_minimo, p.activo, p.imagen,
               (p.stock_actual <= p.stock_minimo) AS stock_bajo
          FROM productos p
          LEFT JOIN categorias c ON c.id = p.categoria_id
@@ -54,7 +54,7 @@ export async function listar(req, res, next) {
 
 export async function crear(req, res, next) {
   try {
-    const { sku, nombre, categoria_id, precio_compra, precio_venta, stock_minimo } = req.body;
+    const { sku, nombre, categoria_id, precio_compra, precio_venta, stock_minimo, imagen } = req.body;
     if (!sku || !nombre) {
       return res.status(400).json({ ok: false, error: 'SKU y nombre son obligatorios' });
     }
@@ -63,10 +63,10 @@ export async function crear(req, res, next) {
       return res.status(409).json({ ok: false, error: 'Ya existe un producto con ese SKU' });
     }
     const { rows } = await query(
-      `INSERT INTO productos (sku, nombre, categoria_id, precio_compra, precio_venta, stock_minimo)
-       VALUES ($1, $2, $3, $4, $5, $6)
-       RETURNING id, sku, nombre, categoria_id, precio_compra, precio_venta, stock_actual, stock_minimo, activo`,
-      [sku, nombre, categoria_id || null, precio_compra || 0, precio_venta || 0, stock_minimo || 0]
+      `INSERT INTO productos (sku, nombre, categoria_id, precio_compra, precio_venta, stock_minimo, imagen)
+       VALUES ($1, $2, $3, $4, $5, $6, $7)
+       RETURNING id, sku, nombre, categoria_id, precio_compra, precio_venta, stock_actual, stock_minimo, activo, imagen`,
+      [sku, nombre, categoria_id || null, precio_compra || 0, precio_venta || 0, stock_minimo || 0, imagen || null]
     );
     res.status(201).json({ ok: true, data: rows[0] });
   } catch (err) { next(err); }
@@ -75,7 +75,7 @@ export async function crear(req, res, next) {
 export async function actualizar(req, res, next) {
   try {
     const { id } = req.params;
-    const { sku, nombre, categoria_id, precio_compra, precio_venta, stock_minimo } = req.body;
+    const { sku, nombre, categoria_id, precio_compra, precio_venta, stock_minimo, imagen } = req.body;
 
     // Si cambian el SKU, verificar que no choque con otro producto.
     if (sku) {
@@ -90,10 +90,11 @@ export async function actualizar(req, res, next) {
          categoria_id = $3,
          precio_compra = COALESCE($4, precio_compra),
          precio_venta = COALESCE($5, precio_venta),
-         stock_minimo = COALESCE($6, stock_minimo)
-       WHERE id = $7
-       RETURNING id, sku, nombre, categoria_id, precio_compra, precio_venta, stock_actual, stock_minimo, activo`,
-      [sku, nombre, categoria_id || null, precio_compra, precio_venta, stock_minimo, id]
+         stock_minimo = COALESCE($6, stock_minimo),
+         imagen = COALESCE($7, imagen)
+       WHERE id = $8
+       RETURNING id, sku, nombre, categoria_id, precio_compra, precio_venta, stock_actual, stock_minimo, activo, imagen`,
+      [sku, nombre, categoria_id || null, precio_compra, precio_venta, stock_minimo, imagen ?? null, id]
     );
     if (rowCount === 0) return res.status(404).json({ ok: false, error: 'Producto no encontrado' });
     res.json({ ok: true, data: rows[0] });

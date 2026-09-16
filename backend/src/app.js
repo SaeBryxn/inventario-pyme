@@ -18,7 +18,7 @@ const app = express();
 
 // --- Middlewares globales ---
 app.use(cors({ origin: process.env.CORS_ORIGIN || 'http://localhost:5173' }));
-app.use(express.json());
+app.use(express.json({ limit: '6mb' })); // 6mb: permite imágenes en base64
 
 // --- Ruta de salud (para comprobar que la API vive) ---
 app.get('/api/health', (req, res) => {

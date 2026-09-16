@@ -52,3 +52,55 @@ export async function login(req, res, next) {
 export async function me(req, res) {
   return res.json({ ok: true, data: req.user });
 }
+
+// GET /api/auth/perfil — datos completos del usuario (incluye avatar y fecha).
+export async function getPerfil(req, res, next) {
+  try {
+    const { rows } = await query(
+      'SELECT id, nombre, email, rol, avatar, created_at FROM usuarios WHERE id = $1',
+      [req.user.id]
+    );
+    if (rows.length === 0) return res.status(404).json({ ok: false, error: 'Usuario no encontrado' });
+    res.json({ ok: true, data: rows[0] });
+  } catch (err) { next(err); }
+}
+
+// PUT /api/auth/perfil — actualiza nombre, email y/o avatar del propio usuario.
+export async function updatePerfil(req, res, next) {
+  try {
+    const { nombre, email, avatar } = req.body;
+    // avatar: puede venir como data URL (nueva foto), null (quitar) o undefined (no tocar).
+    const { rows } = await query(
+      `UPDATE usuarios SET
+         nombre = COALESCE($1, nombre),
+         email  = COALESCE($2, email),
+         avatar = CASE WHEN $3::text IS NULL AND $4 = true THEN NULL
+                       WHEN $3::text IS NOT NULL THEN $3
+                       ELSE avatar END
+       WHERE id = $5
+       RETURNING id, nombre, email, rol, avatar, created_at`,
+      [nombre ?? null, email ?? null, avatar ?? null, req.body.quitarAvatar === true, req.user.id]
+    );
+    res.json({ ok: true, data: rows[0] });
+  } catch (err) { next(err); }
+}
+
+// PUT /api/auth/password — cambia la contraseña verificando la actual.
+export async function cambiarPassword(req, res, next) {
+  try {
+    const { actual, nueva } = req.body;
+    if (!actual || !nueva) {
+      return res.status(400).json({ ok: false, error: 'Debes indicar la contraseña actual y la nueva' });
+    }
+    if (String(nueva).length < 6) {
+      return res.status(400).json({ ok: false, error: 'La nueva contraseña debe tener al menos 6 caracteres' });
+    }
+    const { rows } = await query('SELECT password_hash FROM usuarios WHERE id = $1', [req.user.id]);
+    const ok = await bcrypt.compare(actual, rows[0].password_hash);
+    if (!ok) return res.status(400).json({ ok: false, error: 'La contraseña actual no es correcta' });
+
+    const hash = await bcrypt.hash(nueva, 10);
+    await query('UPDATE usuarios SET password_hash = $1 WHERE id = $2', [hash, req.user.id]);
+    res.json({ ok: true, data: { actualizado: true } });
+  } catch (err) { next(err); }
+}

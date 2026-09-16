@@ -46,6 +46,12 @@ export const reportesService = {
   stockBajo: () => api.get('/api/reportes/stock-bajo'),
 };
 
+export const perfilService = {
+  get: () => api.get('/api/auth/perfil'),
+  actualizar: (data) => api.put('/api/auth/perfil', data),
+  cambiarPassword: (data) => api.put('/api/auth/password', data),
+};
+
 export const productosService = {
   // params: { buscar, categoria, estado, page, limit }
   listar: (params = {}) => {

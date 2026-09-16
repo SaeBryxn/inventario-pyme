@@ -10,6 +10,7 @@ CREATE TABLE usuarios (
   email         VARCHAR(120) UNIQUE NOT NULL,
   password_hash VARCHAR(255) NOT NULL,
   rol           VARCHAR(20)  NOT NULL DEFAULT 'vendedor',  -- admin | vendedor
+  avatar        TEXT,                                       -- imagen en base64 (data URL)
   activo        BOOLEAN      NOT NULL DEFAULT TRUE,
   created_at    TIMESTAMP    NOT NULL DEFAULT NOW()
 );
@@ -37,6 +38,7 @@ CREATE TABLE productos (
   precio_venta  NUMERIC(10,2) NOT NULL DEFAULT 0,
   stock_actual  INT NOT NULL DEFAULT 0,
   stock_minimo  INT NOT NULL DEFAULT 0,
+  imagen        TEXT,                          -- imagen en base64 (data URL)
   activo        BOOLEAN NOT NULL DEFAULT TRUE
 );
 

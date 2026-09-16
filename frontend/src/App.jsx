@@ -1,6 +1,9 @@
 // Enrutado principal de la app.
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext.jsx';
+import { ThemeProvider } from './context/ThemeContext.jsx';
+import { ToastProvider } from './context/ToastContext.jsx';
+import { ConfirmProvider } from './context/ConfirmContext.jsx';
 import ProtectedRoute from './components/ProtectedRoute.jsx';
 import Login from './pages/Login.jsx';
 import Dashboard from './pages/Dashboard.jsx';
@@ -11,11 +14,15 @@ import Proveedores from './pages/Proveedores.jsx';
 import Inventario from './pages/Inventario.jsx';
 import Ventas from './pages/Ventas.jsx';
 import Reportes from './pages/Reportes.jsx';
+import Perfil from './pages/Perfil.jsx';
 
 export default function App() {
   return (
-    <AuthProvider>
-      <BrowserRouter>
+    <ThemeProvider>
+      <ToastProvider>
+        <ConfirmProvider>
+          <AuthProvider>
+            <BrowserRouter>
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route
@@ -31,6 +38,14 @@ export default function App() {
             element={
               <ProtectedRoute>
                 <Productos />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/perfil"
+            element={
+              <ProtectedRoute>
+                <Perfil />
               </ProtectedRoute>
             }
           />
@@ -82,9 +97,11 @@ export default function App() {
               </ProtectedRoute>
             }
           />
-          {/* TODO Sprint 3+: /inventario, /ventas */}
         </Routes>
-      </BrowserRouter>
-    </AuthProvider>
+            </BrowserRouter>
+          </AuthProvider>
+        </ConfirmProvider>
+      </ToastProvider>
+    </ThemeProvider>
   );
 }

@@ -1,23 +1,29 @@
-// Página de categorías (HU-04). Solo Admin.
+// Página de categorías (HU-04). Solo Admin. Con toasts, confirmación, skeleton y estado vacío.
 import { useEffect, useState } from 'react';
 import Layout from '../components/Layout.jsx';
+import { SkeletonTable } from '../components/Skeleton.jsx';
+import EmptyState from '../components/EmptyState.jsx';
 import { categoriasService } from '../services/catalogo.js';
+import { useToast } from '../context/ToastContext.jsx';
+import { useConfirm } from '../context/ConfirmContext.jsx';
+import { IconTag, IconPlus } from '../components/icons.jsx';
 
 const VACIO = { nombre: '', descripcion: '' };
 
 export default function Categorias() {
+  const toast = useToast();
+  const confirmar = useConfirm();
   const [items, setItems] = useState([]);
   const [cargando, setCargando] = useState(true);
-  const [error, setError] = useState('');
   const [modal, setModal] = useState(false);
   const [editando, setEditando] = useState(null);
   const [form, setForm] = useState(VACIO);
   const [errorForm, setErrorForm] = useState('');
 
   async function cargar() {
-    setCargando(true); setError('');
+    setCargando(true);
     try { setItems(await categoriasService.listar()); }
-    catch (e) { setError(e.message); }
+    catch (e) { toast.error(e.message); }
     finally { setCargando(false); }
   }
   useEffect(() => { cargar(); }, []);
@@ -31,48 +37,53 @@ export default function Categorias() {
       if (editando) await categoriasService.actualizar(editando, form);
       else await categoriasService.crear(form);
       setModal(false); await cargar();
+      toast.ok(editando ? 'Categoría actualizada' : 'Categoría creada');
     } catch (e) { setErrorForm(e.message); }
   }
 
   async function eliminar(c) {
-    if (!confirm(`¿Eliminar la categoría "${c.nombre}"?`)) return;
-    try { await categoriasService.eliminar(c.id); await cargar(); }
-    catch (e) { setError(e.message); }
+    const ok = await confirmar({ titulo: 'Eliminar categoría', mensaje: `¿Seguro que quieres eliminar "${c.nombre}"?`, confirmar: 'Eliminar', peligro: true });
+    if (!ok) return;
+    try { await categoriasService.eliminar(c.id); await cargar(); toast.ok('Categoría eliminada'); }
+    catch (e) { toast.error(e.message); }
   }
 
   return (
-    <Layout>
+    <Layout title="Categorías">
       <div className="toolbar">
         <div>
           <h2>Categorías</h2>
           <p className="muted">Organiza tus productos por categoría.</p>
         </div>
-        <button className="btn" onClick={nuevo}>+ Nueva categoría</button>
+        <button className="btn" onClick={nuevo}><IconPlus width={16} height={16} /> Nueva categoría</button>
       </div>
 
-      {error && <p className="auth__error">{error}</p>}
-      {cargando ? <p className="muted">Cargando…</p> : (
-        <div className="table-wrap">
-          <table>
-            <thead><tr><th>Nombre</th><th>Descripción</th><th></th></tr></thead>
-            <tbody>
-              {items.map((c) => (
-                <tr key={c.id}>
-                  <td>{c.nombre}</td>
-                  <td className="muted">{c.descripcion || '—'}</td>
-                  <td>
-                    <div className="row-actions">
-                      <button className="btn btn--ghost btn--sm" onClick={() => editar(c)}>Editar</button>
-                      <button className="btn btn--ghost btn--sm" onClick={() => eliminar(c)}>Eliminar</button>
-                    </div>
-                  </td>
-                </tr>
-              ))}
-              {items.length === 0 && <tr><td colSpan="3" className="muted">Sin categorías.</td></tr>}
-            </tbody>
-          </table>
-        </div>
-      )}
+      {cargando ? <SkeletonTable rows={4} cols={3} />
+        : items.length === 0 ? (
+          <EmptyState icon={IconTag} titulo="Aún no hay categorías"
+            texto="Crea tu primera categoría para organizar el catálogo."
+            accion={<button className="btn" onClick={nuevo}><IconPlus width={16} height={16} /> Nueva categoría</button>} />
+        ) : (
+          <div className="table-wrap">
+            <table>
+              <thead><tr><th>Nombre</th><th>Descripción</th><th></th></tr></thead>
+              <tbody>
+                {items.map((c) => (
+                  <tr key={c.id}>
+                    <td>{c.nombre}</td>
+                    <td className="muted">{c.descripcion || '—'}</td>
+                    <td>
+                      <div className="row-actions">
+                        <button className="btn btn--ghost btn--sm" onClick={() => editar(c)}>Editar</button>
+                        <button className="btn btn--ghost btn--sm" onClick={() => eliminar(c)}>Eliminar</button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
 
       {modal && (
         <div className="modal-overlay" onClick={() => setModal(false)}>

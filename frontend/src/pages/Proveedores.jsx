@@ -2,10 +2,14 @@
 import { useEffect, useState } from 'react';
 import Layout from '../components/Layout.jsx';
 import { proveedoresService } from '../services/catalogo.js';
+import { useToast } from '../context/ToastContext.jsx';
+import { useConfirm } from '../context/ConfirmContext.jsx';
 
 const VACIO = { nombre: '', ruc: '', telefono: '', email: '' };
 
 export default function Proveedores() {
+  const toast = useToast();
+  const confirmar = useConfirm();
   const [items, setItems] = useState([]);
   const [cargando, setCargando] = useState(true);
   const [error, setError] = useState('');
@@ -31,13 +35,15 @@ export default function Proveedores() {
       if (editando) await proveedoresService.actualizar(editando, form);
       else await proveedoresService.crear(form);
       setModal(false); await cargar();
+      toast.ok(editando ? 'Proveedor actualizado' : 'Proveedor creado');
     } catch (e) { setErrorForm(e.message); }
   }
 
   async function eliminar(p) {
-    if (!confirm(`¿Eliminar el proveedor "${p.nombre}"?`)) return;
-    try { await proveedoresService.eliminar(p.id); await cargar(); }
-    catch (e) { setError(e.message); }
+    const ok = await confirmar({ titulo: 'Eliminar proveedor', mensaje: `¿Seguro que quieres eliminar "${p.nombre}"?`, confirmar: 'Eliminar', peligro: true });
+    if (!ok) return;
+    try { await proveedoresService.eliminar(p.id); await cargar(); toast.ok('Proveedor eliminado'); }
+    catch (e) { toast.error(e.message); }
   }
 
   return (

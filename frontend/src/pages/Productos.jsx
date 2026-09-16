@@ -4,11 +4,15 @@ import { useEffect, useState } from 'react';
 import Layout from '../components/Layout.jsx';
 import { productosService, categoriasService } from '../services/catalogo.js';
 import { useAuth } from '../context/AuthContext.jsx';
+import { resizeImage } from '../utils/image.js';
+import { IconBox, IconCamera } from '../components/icons.jsx';
+import { useToast } from '../context/ToastContext.jsx';
 
-const VACIO = { sku: '', nombre: '', categoria_id: '', precio_compra: '', precio_venta: '', stock_minimo: '' };
+const VACIO = { sku: '', nombre: '', categoria_id: '', precio_compra: '', precio_venta: '', stock_minimo: '', imagen: null };
 
 export default function Productos() {
   const { usuario } = useAuth();
+  const toast = useToast();
   const esAdmin = usuario?.rol === 'admin';
 
   const [items, setItems] = useState([]);
@@ -55,8 +59,18 @@ export default function Productos() {
     setForm({
       sku: p.sku, nombre: p.nombre, categoria_id: p.categoria_id || '',
       precio_compra: p.precio_compra, precio_venta: p.precio_venta, stock_minimo: p.stock_minimo,
+      imagen: p.imagen || null,
     });
     setErrorForm(''); setModal(true);
+  }
+
+  async function subirImagen(e) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    try {
+      const img = await resizeImage(file, 500);
+      setForm((f) => ({ ...f, imagen: img }));
+    } catch (err) { setErrorForm(err.message); }
   }
 
   async function guardar(e) {
@@ -72,6 +86,7 @@ export default function Productos() {
       if (editando) await productosService.actualizar(editando, datos);
       else await productosService.crear(datos);
       setModal(false);
+      toast.ok(editando ? 'Producto actualizado' : 'Producto creado');
       // recargar la lista
       const res = await productosService.listar({ buscar, categoria, estado, page, limit: 8 });
       setItems(res.items); setMeta({ total: res.total, page: res.page, totalPages: res.totalPages });
@@ -132,7 +147,14 @@ export default function Productos() {
                 {items.map((p) => (
                   <tr key={p.id}>
                     <td className="mono">{p.sku}</td>
-                    <td>{p.nombre}</td>
+                    <td>
+                      <div className="prod-cell">
+                        {p.imagen
+                          ? <img className="prod-thumb" src={p.imagen} alt={p.nombre} />
+                          : <span className="prod-thumb prod-thumb--ph"><IconBox width={18} height={18} /></span>}
+                        <span>{p.nombre}</span>
+                      </div>
+                    </td>
                     <td className="muted">{p.categoria || '—'}</td>
                     <td>{money(p.precio_venta)}</td>
                     <td>
@@ -178,6 +200,22 @@ export default function Productos() {
         <div className="modal-overlay" onClick={() => setModal(false)}>
           <form className="card modal" onClick={(e) => e.stopPropagation()} onSubmit={guardar}>
             <h3>{editando ? 'Editar producto' : 'Nuevo producto'}</h3>
+
+            <div className="prod-imgfield">
+              {form.imagen
+                ? <img className="prod-imgfield__preview" src={form.imagen} alt="Vista previa" />
+                : <span className="prod-imgfield__preview prod-thumb--ph"><IconBox width={28} height={28} /></span>}
+              <div className="prod-imgfield__actions">
+                <label className="btn btn--ghost btn--sm">
+                  <IconCamera width={16} height={16} /> Subir imagen
+                  <input type="file" accept="image/*" onChange={subirImagen} hidden />
+                </label>
+                {form.imagen && (
+                  <button type="button" className="btn btn--ghost btn--sm" onClick={() => setForm({ ...form, imagen: null })}>Quitar</button>
+                )}
+              </div>
+            </div>
+
             <label>SKU
               <input value={form.sku} onChange={(e) => setForm({ ...form, sku: e.target.value })} required />
             </label>
