@@ -1,0 +1,58 @@
+/* ============================================================
+   ProductCombobox.css — Selector de producto accesible.
+   Encapsulado: solo estiliza el patrón combobox/listbox.
+   ============================================================ */
+
+.combobox { position: relative; }
+
+.combobox__input {
+  width: 100%;
+  min-height: 44px; /* Fitts / WCAG 2.5.5: target táctil mínimo */
+}
+
+.combobox__list {
+  position: absolute;
+  z-index: 60;
+  top: calc(100% + 4px);
+  left: 0; right: 0;
+  margin: 0; padding: .3rem;
+  list-style: none;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  box-shadow: var(--shadow);
+  max-height: 300px; /* techo físico: refuerza el límite de Miller */
+  overflow-y: auto;
+}
+
+.combobox__opt {
+  display: grid;
+  gap: 1px;
+  padding: .5rem .6rem;
+  border-radius: 8px;
+  cursor: pointer;
+}
+/* Resaltado por aria-activedescendant (teclado) y hover (puntero) unificados */
+.combobox__opt.is-active { background: var(--accent-soft); }
+
+/* Chunking: nombre primario / metadata subordinada */
+.combobox__name { font-size: .92rem; color: var(--fg); font-weight: 500; }
+.combobox__meta { font-size: .76rem; color: var(--muted); }
+.combobox__opt.is-active .combobox__meta { color: var(--accent-2); }
+
+.combobox__empty { padding: .6rem; color: var(--muted); font-size: .88rem; }
+
+/* Excedente de Miller: informativo, no interactivo */
+.combobox__more {
+  padding: .45rem .6rem;
+  font-size: .74rem;
+  color: var(--muted);
+  border-top: 1px dashed var(--border);
+  margin-top: .2rem;
+}
+
+/* Utilidad: contenido solo para lectores de pantalla */
+.sr-only {
+  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+}

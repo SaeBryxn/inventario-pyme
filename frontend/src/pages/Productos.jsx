@@ -1,6 +1,7 @@
 // Página de productos (HU-05 CRUD, HU-06 búsqueda/filtros/paginación).
 // Ver: admin y vendedor. Crear/editar/desactivar: solo admin.
 import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import Layout from '../components/Layout.jsx';
 import { productosService, categoriasService } from '../services/catalogo.js';
 import { useAuth } from '../context/AuthContext.jsx';
@@ -152,7 +153,7 @@ export default function Productos() {
                         {p.imagen
                           ? <img className="prod-thumb" src={p.imagen} alt={p.nombre} />
                           : <span className="prod-thumb prod-thumb--ph"><IconBox width={18} height={18} /></span>}
-                        <span>{p.nombre}</span>
+                        <Link to={`/productos/${p.id}`} className="prod-link">{p.nombre}</Link>
                       </div>
                     </td>
                     <td className="muted">{p.categoria || '—'}</td>

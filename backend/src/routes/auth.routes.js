@@ -2,10 +2,12 @@
 import { Router } from 'express';
 import { login, me, getPerfil, updatePerfil, cambiarPassword } from '../controllers/auth.controller.js';
 import { verifyToken } from '../middlewares/auth.middleware.js';
+import { validate } from '../middlewares/validate.middleware.js';
+import { loginSchema } from '../schemas/index.js';
 
 const router = Router();
 
-router.post('/login', login);                          // HU-01
+router.post('/login', validate(loginSchema), login);   // HU-01
 router.get('/me', verifyToken, me);                    // datos del token
 router.get('/perfil', verifyToken, getPerfil);         // perfil completo
 router.put('/perfil', verifyToken, updatePerfil);      // editar datos + avatar

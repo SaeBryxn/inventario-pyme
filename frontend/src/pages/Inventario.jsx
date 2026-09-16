@@ -18,6 +18,8 @@ export default function Inventario() {
   // Filtros del historial
   const [fProducto, setFProducto] = useState('');
   const [fTipo, setFTipo] = useState('');
+  const [fDesde, setFDesde] = useState('');
+  const [fHasta, setFHasta] = useState('');
 
   // Modal registrar
   const [modal, setModal] = useState(false);
@@ -28,7 +30,7 @@ export default function Inventario() {
   async function cargarHistorial() {
     setCargando(true); setError('');
     try {
-      setMovimientos(await movimientosService.listar({ producto_id: fProducto, tipo: fTipo }));
+      setMovimientos(await movimientosService.listar({ producto_id: fProducto, tipo: fTipo, desde: fDesde, hasta: fHasta }));
     } catch (e) { setError(e.message); }
     finally { setCargando(false); }
   }
@@ -39,7 +41,7 @@ export default function Inventario() {
     proveedoresService.listar().then(setProveedores).catch(() => {});
   }, []);
 
-  useEffect(() => { cargarHistorial(); }, [fProducto, fTipo]);
+  useEffect(() => { cargarHistorial(); }, [fProducto, fTipo, fDesde, fHasta]);
 
   function abrir() { setForm(VACIO); setErrorForm(''); setModal(true); }
 
@@ -85,6 +87,8 @@ export default function Inventario() {
           <option value="salida">Salidas</option>
           <option value="ajuste">Ajustes</option>
         </select>
+        <label className="filtros__fecha">Desde <input type="date" value={fDesde} onChange={(e) => setFDesde(e.target.value)} /></label>
+        <label className="filtros__fecha">Hasta <input type="date" value={fHasta} onChange={(e) => setFHasta(e.target.value)} /></label>
       </div>
 
       {error && <p className="auth__error">{error}</p>}

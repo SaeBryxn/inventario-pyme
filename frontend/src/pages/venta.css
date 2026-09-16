@@ -1,0 +1,98 @@
+/* ============================================================
+   venta.css — Regiones del modal "Nueva venta".
+   Jerarquía por SUPERFICIE + RADIO + PADDING (Región Común Gestalt),
+   no por bordes pesados ni whitespace excesivo.
+   ============================================================ */
+
+/* ── Región 1: COMPOSICIÓN (añadir producto) ─────────────── */
+.venta__compose {
+  display: grid;
+  /* Producto (combobox) toma el resto; cantidad y Agregar por Fitts */
+  grid-template-columns: 1fr 84px auto;
+  gap: .6rem;
+  align-items: start;
+}
+.venta__qty { width: 100%; min-height: 44px; text-align: center; }
+.venta__add { min-height: 44px; align-self: start; } /* target de acción repetida */
+
+/* Proximidad Gestalt: el error vive pegado a su causa */
+.venta__error {
+  grid-column: 1 / -1;
+  margin: .2rem 0 0;
+  color: var(--danger);
+  font-size: .85rem;
+}
+
+/* ── Región 2: RESULTADO (carrito + totales) ─────────────── */
+/* La superficie propia ES la frontera. El contraste de fondo separa
+   "composición" de "resultado" a nivel preatencional. */
+.venta-cart {
+  margin-top: 1rem;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 1rem;
+  display: grid;
+  gap: .75rem;
+}
+
+/* Zeigarnik + estado en vivo: refuerza el avance del bucle abierto */
+.venta-cart__live {
+  font-size: .8rem;
+  font-weight: 600;
+  color: var(--muted);
+  letter-spacing: .02em;
+}
+
+.venta-cart__items { list-style: none; margin: 0; padding: 0; display: grid; gap: .5rem; }
+.venta-cart__empty { color: var(--muted); font-size: .9rem; margin: 0; }
+
+.venta-cart__row {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  grid-template-areas:
+    "name  total rm"
+    "meta  total rm";
+  gap: 0 .75rem;
+  align-items: center;
+}
+.venta-cart__name { grid-area: name; font-weight: 500; }
+.venta-cart__meta { grid-area: meta; font-size: .76rem; color: var(--muted); }
+.venta-cart__total { grid-area: total; font-weight: 600; }
+.venta-cart__rm {
+  grid-area: rm;
+  min-width: 34px; min-height: 34px;
+  background: transparent; border: none; color: var(--muted);
+  cursor: pointer; border-radius: 8px; font-size: .95rem;
+}
+.venta-cart__rm:hover { background: var(--surface); color: var(--danger); }
+
+/* Totales como lista de definición semántica (dt/dd) */
+.venta-cart__totales {
+  margin: 0;
+  display: grid; gap: .25rem;
+  border-top: 1px dashed var(--border);
+  padding-top: .6rem;
+}
+.venta-cart__totales > div { display: flex; justify-content: space-between; font-size: .9rem; }
+.venta-cart__totales dt, .venta-cart__totales dd { margin: 0; }
+.venta-cart__totales dt { color: var(--muted); }
+.venta-cart__totales .es-total { font-size: 1.15rem; font-weight: 700; }
+.venta-cart__totales .es-total dt { color: var(--fg); }
+.venta-cart__totales .es-total dd { color: var(--accent); }
+
+/* ── Cliente: nodo de decisión FUERA del camino crítico (Hick) ── */
+.venta__cliente { margin-top: 1rem; }
+.venta__cliente summary {
+  cursor: pointer; color: var(--muted); font-size: .9rem;
+  padding: .3rem 0; list-style-position: inside;
+}
+.venta__cliente[open] summary { color: var(--fg); margin-bottom: .5rem; }
+
+/* ── Acción terminal: único acento sólido del modal (Von Restorff) ── */
+.venta__submit { min-height: 44px; }
+
+@media (max-width: 480px) {
+  .venta__compose { grid-template-columns: 1fr; } /* colapso vertical, 0 scroll-x */
+  .venta__add { width: 100%; }
+}

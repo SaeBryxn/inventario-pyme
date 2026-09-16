@@ -7,7 +7,7 @@ import Avatar from './Avatar.jsx';
 import {
   IconDashboard, IconBox, IconCart, IconChart, IconLayers, IconTag,
   IconTruck, IconUsers, IconUser, IconLogout, IconMenu, IconChevron,
-  IconSun, IconMoon,
+  IconSun, IconMoon, IconSettings, IconShield,
 } from './icons.jsx';
 
 // Items del menú. `admin: true` = solo lo ve el administrador.
@@ -15,11 +15,14 @@ const NAV = [
   { to: '/', label: 'Dashboard', icon: IconDashboard, end: true },
   { to: '/productos', label: 'Productos', icon: IconBox },
   { to: '/ventas', label: 'Ventas', icon: IconCart },
+  { to: '/clientes', label: 'Clientes', icon: IconUser },
   { to: '/inventario', label: 'Inventario', icon: IconLayers, admin: true },
   { to: '/reportes', label: 'Reportes', icon: IconChart, admin: true },
   { to: '/categorias', label: 'Categorías', icon: IconTag, admin: true },
   { to: '/proveedores', label: 'Proveedores', icon: IconTruck, admin: true },
   { to: '/usuarios', label: 'Usuarios', icon: IconUsers, admin: true },
+  { to: '/auditoria', label: 'Auditoría', icon: IconShield, admin: true },
+  { to: '/ajustes', label: 'Ajustes', icon: IconSettings, admin: true },
 ];
 
 export default function Layout({ children, title }) {

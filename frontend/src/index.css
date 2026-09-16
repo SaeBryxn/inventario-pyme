@@ -46,6 +46,9 @@ a { color: inherit; }
 .btn--sm { padding: 0.4rem 0.75rem; font-size: 0.83rem; border-radius: 8px; }
 .btn--danger { background: var(--danger); box-shadow: none; }
 .btn--block { width: 100%; justify-content: center; }
+/* Variante tonal: acción secundaria que NO compite con el acento sólido (Von Restorff) */
+.btn--tonal { background: var(--accent-soft); color: var(--accent-2); box-shadow: none; }
+.btn--tonal:hover { background: var(--accent-soft); filter: brightness(.97); }
 
 .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow); }
 
@@ -59,14 +62,15 @@ a { color: inherit; }
 .auth__brand span { color: var(--accent); }
 .auth__sub { color: var(--muted); margin-top: -.75rem; }
 .auth__form label, .modal label { display: grid; gap: .35rem; font-size: .85rem; color: var(--muted); }
-.auth__form input, .modal input, .modal select, .filtros input, .filtros select, .venta__agregar select, .venta__agregar input {
+/* Estilo general de campos (cubre todas las páginas y el modo oscuro) */
+input[type="text"], input[type="email"], input[type="password"], input[type="number"],
+input[type="date"], input[type="search"], input:not([type]), select, textarea {
   background: var(--input-bg); border: 1px solid var(--border); border-radius: 10px;
   padding: .6rem .8rem; color: var(--fg); font-size: .95rem; font-family: inherit;
 }
-.auth__form input:focus, .modal input:focus, .modal select:focus,
-.filtros input:focus, .filtros select:focus, .venta__agregar select:focus, .venta__agregar input:focus {
-  outline: 2px solid var(--accent); outline-offset: 1px;
-}
+input:focus, select:focus, textarea:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
+/* En oscuro, el selector de fecha nativo se ve mejor con esquema oscuro */
+:root[data-theme="dark"] input[type="date"] { color-scheme: dark; }
 .auth__error { color: var(--danger); font-size: .85rem; }
 .auth__ok { color: var(--ok); font-size: .85rem; }
 .auth__hint { color: var(--muted); font-size: .78rem; text-align: center; font-family: var(--mono); }
@@ -174,6 +178,8 @@ tbody tr:hover { background: var(--surface-2); }
 .prod-thumb { width: 38px; height: 38px; border-radius: 8px; object-fit: cover; border: 1px solid var(--border); background: var(--surface-2); }
 .prod-thumb--ph { display: inline-grid; place-items: center; color: var(--muted); }
 .prod-cell { display: flex; align-items: center; gap: .6rem; }
+.prod-link { color: var(--fg); text-decoration: none; font-weight: 500; }
+.prod-link:hover { color: var(--accent); text-decoration: underline; }
 
 /* Campo de imagen en el formulario de producto */
 .prod-imgfield { display: flex; align-items: center; gap: 1rem; }
@@ -184,6 +190,8 @@ tbody tr:hover { background: var(--surface-2); }
 /* ---- Filtros ---- */
 .filtros { display: flex; gap: .6rem; flex-wrap: wrap; margin-bottom: 1rem; }
 .filtros__buscar { flex: 1; min-width: 200px; }
+.filtros__fecha { display: flex; align-items: center; gap: .4rem; font-size: .85rem; color: var(--muted); }
+.filtros__fecha input { color: var(--fg); }
 .paginacion { display: flex; align-items: center; justify-content: center; gap: 1rem; margin-top: 1.25rem; }
 
 /* ============================================================
@@ -202,6 +210,38 @@ tbody tr:hover { background: var(--surface-2); }
 .alertas { margin-top: 2rem; }
 .alertas h3 { font-size: 1.1rem; margin-bottom: .75rem; display: flex; align-items: center; gap: .5rem; }
 
+/* Gráficos */
+.charts { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1.75rem; }
+@media (max-width: 800px) { .charts { grid-template-columns: 1fr; } }
+.chartcard { padding: 1.25rem; }
+.chartcard h3 { font-size: .95rem; margin-bottom: .75rem; color: var(--fg); }
+.chartcard canvas { display: block; width: 100%; }
+.barcode { max-width: 100%; height: auto; }
+
+/* Detalle de producto */
+.volver { display: inline-block; color: var(--muted); text-decoration: none; font-size: .9rem; margin-bottom: 1rem; }
+.volver:hover { color: var(--accent); }
+.detalle { display: grid; grid-template-columns: 320px 1fr; gap: 1.25rem; align-items: start; }
+.detalle__media { padding: 1.25rem; display: grid; gap: 1rem; justify-items: center; }
+.detalle__img { width: 100%; max-width: 260px; aspect-ratio: 1; object-fit: cover; border-radius: 12px; border: 1px solid var(--border); background: var(--surface-2); display: grid; place-items: center; color: var(--muted); }
+.detalle__barcode { display: grid; justify-items: center; gap: .3rem; background: #fff; padding: .6rem; border-radius: 8px; }
+.detalle__info { padding: 1.5rem; }
+.detalle__head { display: flex; align-items: center; gap: 1rem; justify-content: space-between; }
+.detalle__grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.1rem; margin-top: 1.25rem; }
+.detalle__grid strong { font-size: 1.3rem; display: block; }
+.detalle__lbl { font-size: .78rem; color: var(--muted); text-transform: uppercase; letter-spacing: .04em; }
+.texto-alerta { color: var(--danger); }
+@media (max-width: 720px) { .detalle { grid-template-columns: 1fr; } }
+
+/* Comprobante / recibo */
+.recibo { font-family: var(--mono); color: #111; }
+.recibo__head { text-align: center; margin-bottom: .75rem; }
+.recibo__neg { font-size: 1.1rem; font-weight: 700; }
+.recibo table { width: 100%; font-size: .82rem; }
+.recibo th, .recibo td { padding: .3rem 0; border: none; white-space: normal; background: transparent; }
+.recibo__tot { display: flex; justify-content: space-between; font-size: .9rem; }
+.recibo__tot--grande { font-size: 1.1rem; font-weight: 700; border-top: 1px dashed #999; padding-top: .4rem; margin-top: .3rem; }
+
 /* ============================================================
    Modales
    ============================================================ */
@@ -215,8 +255,8 @@ tbody tr:hover { background: var(--surface-2); }
 @media (max-width: 420px) { .modal__row { grid-template-columns: 1fr; } }
 
 /* ---- Ventas ---- */
-.venta__agregar { display: flex; gap: .5rem; flex-wrap: wrap; }
-.venta__agregar select { flex: 1; min-width: 0; }
+/* Nota: la composición del modal "Nueva venta" vive en pages/venta.css (Región Común).
+   Aquí solo queda .venta__total, aún usado por el modal de DETALLE y el recibo. */
 .venta__total { display: flex; justify-content: space-between; align-items: center; padding: .75rem .25rem; font-size: 1.15rem; border-top: 2px solid var(--border); margin-top: .25rem; }
 .venta__total strong { color: var(--accent); font-size: 1.3rem; }
 
@@ -302,6 +342,17 @@ tbody tr:hover { background: var(--surface-2); }
 .empty__icon { width: 56px; height: 56px; border-radius: 14px; display: grid; place-items: center; background: var(--accent-soft); color: var(--accent-2); margin-bottom: .5rem; }
 .empty__titulo { font-size: 1.05rem; font-weight: 600; color: var(--fg); }
 .empty__texto { max-width: 42ch; }
+
+/* ============================================================
+   Impresión: solo el recibo
+   ============================================================ */
+.print-area { display: none; }
+@media print {
+  body { background: #fff; }
+  .shell, .modal-overlay, .toaster { display: none !important; }
+  .print-area { display: block !important; padding: 0; }
+  @page { margin: 12mm; }
+}
 
 /* ============================================================
    Tema oscuro

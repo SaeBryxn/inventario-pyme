@@ -52,6 +52,22 @@ export const perfilService = {
   cambiarPassword: (data) => api.put('/api/auth/password', data),
 };
 
+export const clientesService = {
+  listar: () => api.get('/api/clientes'),
+  crear: (data) => api.post('/api/clientes', data),
+  actualizar: (id, data) => api.put(`/api/clientes/${id}`, data),
+  eliminar: (id) => api.del(`/api/clientes/${id}`),
+};
+
+export const configService = {
+  get: () => api.get('/api/configuracion'),
+  actualizar: (data) => api.put('/api/configuracion', data),
+};
+
+export const auditoriaService = {
+  listar: () => api.get('/api/auditoria'),
+};
+
 export const productosService = {
   // params: { buscar, categoria, estado, page, limit }
   listar: (params = {}) => {
@@ -60,6 +76,7 @@ export const productosService = {
     ).toString();
     return api.get(`/api/productos${qs ? `?${qs}` : ''}`);
   },
+  obtener: (id) => api.get(`/api/productos/${id}`),
   crear: (data) => api.post('/api/productos', data),
   actualizar: (id, data) => api.put(`/api/productos/${id}`, data),
   toggleActivo: (id) => api.patch(`/api/productos/${id}/estado`),

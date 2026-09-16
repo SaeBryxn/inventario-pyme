@@ -52,6 +52,22 @@ export async function listar(req, res, next) {
   } catch (err) { next(err); }
 }
 
+// GET /api/productos/:id — un producto con el nombre de su categoría.
+export async function obtenerUno(req, res, next) {
+  try {
+    const { rows } = await query(
+      `SELECT p.id, p.sku, p.nombre, p.categoria_id, c.nombre AS categoria,
+              p.precio_compra, p.precio_venta, p.stock_actual, p.stock_minimo, p.activo, p.imagen,
+              (p.stock_actual <= p.stock_minimo) AS stock_bajo
+         FROM productos p LEFT JOIN categorias c ON c.id = p.categoria_id
+        WHERE p.id = $1`,
+      [req.params.id]
+    );
+    if (rows.length === 0) return res.status(404).json({ ok: false, error: 'Producto no encontrado' });
+    res.json({ ok: true, data: rows[0] });
+  } catch (err) { next(err); }
+}
+
 export async function crear(req, res, next) {
   try {
     const { sku, nombre, categoria_id, precio_compra, precio_venta, stock_minimo, imagen } = req.body;

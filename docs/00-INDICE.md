@@ -14,6 +14,11 @@
 6. [Guía Scrum](06-guia-scrum.md) — cómo llevamos la metodología siendo un solo dev.
 7. [Definición de Hecho](07-definicion-de-hecho.md) — cuándo una tarea está realmente terminada.
 
+## 🧠 Diseño y arquitectura
+
+- [[Audit — Venta Flow]] — teardown cognitivo del modal "Nueva venta" (Fitts/Miller/Gestalt, aria-live, refactor).
+- [[C4 — StockPro]] — modelo C4 (Contexto + Contenedor) y mapa DDD del sistema.
+
 ## 🚦 Por dónde empezar (ahora mismo)
 
 1. Lee [Visión y MVP](01-vision-y-mvp.md) para tener claro el norte.

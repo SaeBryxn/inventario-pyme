@@ -7,7 +7,7 @@ import { pool, query } from '../config/db.js';
 export async function registrar(req, res, next) {
   const client = await pool.connect();
   try {
-    const { items } = req.body;
+    const { items, cliente_id } = req.body;
     if (!Array.isArray(items) || items.length === 0) {
       return res.status(400).json({ ok: false, error: 'Agrega al menos un producto a la venta' });
     }
@@ -45,8 +45,8 @@ export async function registrar(req, res, next) {
     const codigo = 'V-' + String(n.rows[0].n).padStart(5, '0');
 
     const venta = await client.query(
-      'INSERT INTO ventas (codigo, usuario_id, total) VALUES ($1, $2, $3) RETURNING id, codigo, total, fecha',
-      [codigo, req.user.id, total]
+      'INSERT INTO ventas (codigo, usuario_id, total, cliente_id) VALUES ($1, $2, $3, $4) RETURNING id, codigo, total, fecha',
+      [codigo, req.user.id, total, cliente_id || null]
     );
     const ventaId = venta.rows[0].id;
 
@@ -85,9 +85,11 @@ export async function listar(req, res, next) {
     const where = cond.length ? `WHERE ${cond.join(' AND ')}` : '';
 
     const { rows } = await query(
-      `SELECT v.id, v.codigo, v.total, v.fecha, u.nombre AS vendedor,
+      `SELECT v.id, v.codigo, v.total, v.fecha, u.nombre AS vendedor, cl.nombre AS cliente,
               (SELECT COUNT(*) FROM detalle_venta d WHERE d.venta_id = v.id)::int AS items
-         FROM ventas v JOIN usuarios u ON u.id = v.usuario_id
+         FROM ventas v
+         JOIN usuarios u ON u.id = v.usuario_id
+         LEFT JOIN clientes cl ON cl.id = v.cliente_id
          ${where}
          ORDER BY v.fecha DESC LIMIT 100`,
       params
@@ -101,8 +103,11 @@ export async function detalle(req, res, next) {
   try {
     const { id } = req.params;
     const venta = await query(
-      `SELECT v.id, v.codigo, v.total, v.fecha, u.nombre AS vendedor
-         FROM ventas v JOIN usuarios u ON u.id = v.usuario_id WHERE v.id = $1`,
+      `SELECT v.id, v.codigo, v.total, v.fecha, u.nombre AS vendedor, cl.nombre AS cliente
+         FROM ventas v
+         JOIN usuarios u ON u.id = v.usuario_id
+         LEFT JOIN clientes cl ON cl.id = v.cliente_id
+         WHERE v.id = $1`,
       [id]
     );
     if (venta.rowCount === 0) return res.status(404).json({ ok: false, error: 'Venta no encontrada' });

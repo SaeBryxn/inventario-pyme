@@ -15,6 +15,10 @@ import Inventario from './pages/Inventario.jsx';
 import Ventas from './pages/Ventas.jsx';
 import Reportes from './pages/Reportes.jsx';
 import Perfil from './pages/Perfil.jsx';
+import Clientes from './pages/Clientes.jsx';
+import Ajustes from './pages/Ajustes.jsx';
+import ProductoDetalle from './pages/ProductoDetalle.jsx';
+import Auditoria from './pages/Auditoria.jsx';
 
 export default function App() {
   return (
@@ -38,6 +42,38 @@ export default function App() {
             element={
               <ProtectedRoute>
                 <Productos />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/productos/:id"
+            element={
+              <ProtectedRoute>
+                <ProductoDetalle />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/clientes"
+            element={
+              <ProtectedRoute>
+                <Clientes />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/auditoria"
+            element={
+              <ProtectedRoute rol="admin">
+                <Auditoria />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/ajustes"
+            element={
+              <ProtectedRoute rol="admin">
+                <Ajustes />
               </ProtectedRoute>
             }
           />
